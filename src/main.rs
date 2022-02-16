@@ -3,8 +3,10 @@ use specs::prelude::*;
 
 mod worldmap;
 mod component;
+mod rect;
 mod gamestate;
-use component::{Position, Renderable, Player};
+mod system;
+use component::{Position, Renderable, Player, Viewshed};
 
 
 fn main() -> rltk::BError {
@@ -16,13 +18,15 @@ fn main() -> rltk::BError {
         ecs: World::new()
     };
 
-    let (rooms, map) = worldmap::racmap::new();
-    gs.ecs.insert(map);
-    let (px, py) = rooms[0].center();
-
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<Player>();
+    gs.ecs.register::<Viewshed>();
+
+    let map = worldmap::Map::new_map_rooms_and_corridors();
+    let (px, py) = map.rooms[0].center();
+    gs.ecs.insert(map);
+
     gs.ecs
         .create_entity()
         .with(Position {x: px, y: py})
@@ -32,7 +36,9 @@ fn main() -> rltk::BError {
             bg: RGB::named(rltk::BLACK),
         })
         .with(Player{})
+        .with(Viewshed {visible_tiles: Vec::new(), range: 8, dirty: true})
         .build();
+
     rltk::main_loop(context, gs)
 }
 
