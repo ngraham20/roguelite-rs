@@ -3,7 +3,7 @@ use specs::prelude::*;
 use crate::component::{Position, Renderable, Player, player};
 use crate::worldmap;
 use crate::worldmap::{Map};
-use crate::system::{Visibility, MonsterAI};
+use crate::system::*;
 
 pub struct State {
     pub ecs: World,
@@ -17,6 +17,10 @@ impl State {
 
         let mut mob = MonsterAI{};
         mob.run_now(&self.ecs);
+
+        let mut mapindex = MapIndexingSystem{};
+        mapindex.run_now(&self.ecs);
+        
         self.ecs.maintain();
     }
 }

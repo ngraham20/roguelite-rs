@@ -7,7 +7,7 @@ mod rect;
 mod gamestate;
 mod system;
 use gamestate::{State, RunState};
-use component::{Position, Renderable, Player, Viewshed, Monster, Name};
+use component::*;
 
 
 fn main() -> rltk::BError {
@@ -26,6 +26,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<Viewshed>();
+    gs.ecs.register::<BlocksTile>();
 
     let map = worldmap::Map::new_map_rooms_and_corridors();
     let (px, py) = map.rooms[0].center();
@@ -51,6 +52,7 @@ fn main() -> rltk::BError {
             .with(Viewshed{visible_tiles: Vec::new(), range: 8, dirty: true})
             .with(Monster{})
             .with(Name{ name: format!("{} #{}", name, i+1)})
+            .with(BlocksTile{})
             .build();
     }
 
