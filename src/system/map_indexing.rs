@@ -9,24 +9,30 @@ impl<'a> System<'a> for MapIndexingSystem {
         WriteExpect<'a, Map>,
         ReadStorage<'a, Position>,
         ReadStorage<'a, BlocksTile>,
+        Entities<'a>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
         // populate the map with all blocking items
         // - walls (map.populate_blocked())
         // - mobs
-        let (mut map, position, blockers) = data;
+        let (mut map, position, blockers, entities) = data;
 
         // block all tiles that are walls
         map.populate_blocked();
 
-        // retrieve all the blocking entities that have a position
-        for (position, _blocks) in (&position, &blockers).join() {
-            // get the tile location they're on
+        // clear the content of each tile
+        map.clear_content_index();
+
+        for (entity, position) in (&entities, &position).join() {
             let idx = map.xy_idx(position.x, position.y);
 
-            // block the tile
-            map.blocked[idx] = true;
+            let _p: Option<&BlocksTile> = blockers.get(entity);
+            if let Some(_p) = _p {
+                map.blocked[idx] = true;
+            }
+
+            map.tile_content[idx].push(entity);
         }
     }
 }

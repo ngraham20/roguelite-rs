@@ -3,7 +3,7 @@ use specs::prelude::*;
 use std::cmp::{max, min};
 use specs_derive::Component;
 use crate::worldmap::*;
-use crate::component::{Position, Viewshed};
+use crate::component::{Position, Viewshed, CombatStats};
 use crate::gamestate::{State, RunState};
 
 #[derive(Component, Debug)]
@@ -13,6 +13,7 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let mut positions = ecs.write_storage::<Position>();
     let mut players = ecs.write_storage::<Player>();
     let mut viewsheds = ecs.write_storage::<Viewshed>();
+    let combat_stats = ecs.read_storage::<CombatStats>();
     let map = ecs.fetch::<Map>();
 
     for(_player, pos, viewshed) in (&mut players, &mut positions, &mut viewsheds).join() {

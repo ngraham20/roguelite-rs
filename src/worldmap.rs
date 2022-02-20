@@ -10,6 +10,7 @@ pub enum TileType {
     Floor
 }
 
+#[derive(Default)]
 pub struct Map {
     pub tiles: Vec<TileType>,
     pub rooms: Vec<Rect>,
@@ -18,6 +19,7 @@ pub struct Map {
     pub revealed_tiles: Vec<bool>,
     pub visible_tiles: Vec<bool>,
     pub blocked: Vec<bool>,
+    pub tile_content: Vec<Vec<Entity>>,
 }
 
 impl Map {
@@ -34,6 +36,7 @@ impl Map {
             revealed_tiles: vec![false; 80*50],
             visible_tiles: vec![false; 80*50],
             blocked: vec![false; 80*50],
+            tile_content: vec![Vec::new(); 80*50]
         };
 
         const MAX_ROOMS : i32 = 30;
@@ -110,6 +113,14 @@ impl Map {
     pub fn populate_blocked(&mut self) {
         for (i, tile) in self.tiles.iter_mut().enumerate() {
             self.blocked[i] = *tile == TileType::Wall;
+        }
+    }
+
+    pub fn clear_content_index(&mut self) {
+        // the content is a vector of entities
+        // clear it.
+        for content in self.tile_content.iter_mut() {
+            content.clear();
         }
     }
 }
