@@ -41,18 +41,22 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
     match ctx.key {
         None => { return RunState::AwaitingInput } // Nothing happened
         Some(key) => match key {
+            VirtualKeyCode::A |
             VirtualKeyCode::Left |
             VirtualKeyCode::Numpad4 |
             VirtualKeyCode::H => try_move_player(-1, 0, &mut gs.ecs),
 
+            VirtualKeyCode::D |
             VirtualKeyCode::Right |
             VirtualKeyCode::Numpad6 |
             VirtualKeyCode::L => try_move_player(1, 0, &mut gs.ecs),
 
+            VirtualKeyCode::W |
             VirtualKeyCode::Up |
             VirtualKeyCode::Numpad8 |
             VirtualKeyCode::K => try_move_player(0, -1, &mut gs.ecs),
 
+            VirtualKeyCode::S |
             VirtualKeyCode::Down |
             VirtualKeyCode::Numpad2 |
             VirtualKeyCode::J => try_move_player(0, 1, &mut gs.ecs),
